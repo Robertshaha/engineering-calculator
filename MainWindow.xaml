@@ -1,40 +1,27 @@
-﻿<Window x:Class="EngineeringCalculator.MainWindow"
+<Window x:Class="EngineeringCalculator.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:EngineeringCalculator"
-        mc:Ignorable="d"
         Title="Инженерный калькулятор" 
-        Height="650" Width="400" 
+        Height="650" Width="400"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="41*"/>
-            <ColumnDefinition Width="9*"/>
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
         <TextBox x:Name="HistoryTextBox" Grid.Row="0" 
                  IsReadOnly="True" TextAlignment="Right" 
-                 FontSize="16" Margin="5,5,5,5" BorderThickness="0"
-                 Background="Transparent" Grid.ColumnSpan="2"/>
-
+                 FontSize="16" Margin="5" BorderThickness="0"
+                 Background="Transparent"/>
+        
         <TextBox x:Name="ResultTextBox" Grid.Row="1" 
                  IsReadOnly="True" TextAlignment="Right" 
-                 FontSize="32" Margin="5,5,5,5" BorderThickness="0"
-                 Background="Transparent" Grid.ColumnSpan="2"/>
-
-        <CheckBox x:Name="DegreesModeCheckBox" Content="Градусы" 
-                  Grid.Row="0" HorizontalAlignment="Left" 
-                  VerticalAlignment="Bottom" Margin="10,0,0,5"/>
-
-        <Grid Grid.Row="2" Margin="5,5,5,5" Grid.ColumnSpan="2">
+                 FontSize="32" Margin="5" BorderThickness="0"
+                 Background="Transparent"/>
+        
+        <Grid Grid.Row="2" Margin="5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
@@ -63,7 +50,7 @@
             <Button x:Name="ButtonLog" Content="log" Grid.Row="1" Grid.Column="2" Click="FunctionButton_Click"/>
             <Button x:Name="ButtonLn" Content="ln" Grid.Row="1" Grid.Column="3" Click="FunctionButton_Click"/>
             <Button x:Name="ButtonFact" Content="n!" Grid.Row="1" Grid.Column="4" Click="FunctionButton_Click"/>
-
+            
             <Button x:Name="ButtonOpenBracket" Content="(" Grid.Row="2" Grid.Column="0" Click="OperatorButton_Click"/>
             <Button x:Name="ButtonCloseBracket" Content=")" Grid.Row="2" Grid.Column="1" Click="OperatorButton_Click"/>
             <Button x:Name="ButtonAbs" Content="|x|" Grid.Row="2" Grid.Column="2" Click="FunctionButton_Click"/>
