@@ -249,8 +249,7 @@ namespace EngineeringCalculator
                 .Replace(",", ".")
                 .Replace("π", Math.PI.ToString(CultureInfo.InvariantCulture))
                 .Replace("e", Math.E.ToString(CultureInfo.InvariantCulture));
-
-            // Автоматический перевод градусов в радианы для тригонометрии
+                
             expression = Regex.Replace(expression, @"(sin|cos|tan)\(", 
                 m => $"Math.{m.Groups[1].Value}(Math.PI/180*");
 
