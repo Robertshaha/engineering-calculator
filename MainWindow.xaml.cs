@@ -1,11 +1,9 @@
-﻿using static System.Net.Mime.MediaTypeNames;
+using System;
+using System.Windows;
+using System.Windows.Controls;
 using System.Data;
 using System.Globalization;
-using System.Linq;
 using System.Text.RegularExpressions;
-using System.Windows.Controls;
-using System.Windows;
-using System;
 
 namespace EngineeringCalculator
 {
@@ -90,19 +88,25 @@ namespace EngineeringCalculator
                 case "sin":
                 case "cos":
                 case "tan":
-                case "log":
-                case "ln":
-                case "√x":
                     ResultTextBox.Text += function + "(";
                     break;
                 case "x²":
                     ResultTextBox.Text += "^2";
+                    break;
+                case "√x":
+                    ResultTextBox.Text += "√(";
                     break;
                 case "x^y":
                     ResultTextBox.Text += "^";
                     break;
                 case "10^x":
                     ResultTextBox.Text += "10^";
+                    break;
+                case "log":
+                    ResultTextBox.Text += "log(";
+                    break;
+                case "ln":
+                    ResultTextBox.Text += "ln(";
                     break;
                 case "n!":
                     CalculateFactorial();
@@ -134,8 +138,7 @@ namespace EngineeringCalculator
 
         private void CalculateFactorial()
         {
-            if (double.TryParse(ResultTextBox.
-                 Text, out var num))
+            if (double.TryParse(ResultTextBox.Text, out var num))
             {
                 try
                 {
@@ -153,7 +156,7 @@ namespace EngineeringCalculator
             if (n < 0) throw new ArgumentException("Факториал отрицательного числа не определен");
             if (n % 1 != 0) throw new ArgumentException("Факториал только для целых чисел");
             if (n > 170) return double.PositiveInfinity;
-
+            
             double result = 1;
             for (int i = 2; i <= n; i++)
             {
@@ -227,7 +230,7 @@ namespace EngineeringCalculator
             {
                 var expression = PrepareExpression(ResultTextBox.Text);
                 var result = EvaluateExpression(expression);
-
+                
                 HistoryTextBox.Text = ResultTextBox.Text + " =";
                 ResultTextBox.Text = result.ToString(CultureInfo.CurrentCulture);
                 _isNewCalculation = true;
@@ -247,24 +250,15 @@ namespace EngineeringCalculator
                 .Replace("π", Math.PI.ToString(CultureInfo.InvariantCulture))
                 .Replace("e", Math.E.ToString(CultureInfo.InvariantCulture));
 
-            if (DegreesModeCheckBox.IsChecked == true)
-            {
-                expression = Regex.Replace(expression, @"(sin|cos|tan)\(",
-                    m => $"Math.{m.Groups[1].Value}(Math.PI/180*");
-            }
-            else
-            {
-                expression = expression
-                    .Replace("sin", "Math.Sin")
-                    .Replace("cos", "Math.Cos")
-                    .Replace("tan", "Math.Tan");
-            }
+            // Автоматический перевод градусов в радианы для тригонометрии
+            expression = Regex.Replace(expression, @"(sin|cos|tan)\(", 
+                m => $"Math.{m.Groups[1].Value}(Math.PI/180*");
 
             expression = expression
-                .Replace("√", "Math.Sqrt")
-                .Replace("log", "Math.Log10")
-                .Replace("ln", "Math.Log")
-                .Replace("abs", "Math.Abs");
+                .Replace("√(", "Math.Sqrt(")
+                .Replace("log(", "Math.Log10(")
+                .Replace("ln(", "Math.Log(")
+                .Replace("abs(", "Math.Abs(");
 
             if (CountCharacter(expression, '(') != CountCharacter(expression, ')'))
             {
