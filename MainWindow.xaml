@@ -2,26 +2,24 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Инженерный калькулятор" 
-        Height="650" Width="400"
+        Height="600" Width="350"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen">
-    <Grid>
+    <Grid Background="#FF2D2D30">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="120"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBox x:Name="HistoryTextBox" Grid.Row="0" 
-                 IsReadOnly="True" TextAlignment="Right" 
-                 FontSize="16" Margin="5" BorderThickness="0"
-                 Background="Transparent"/>
         
-        <TextBox x:Name="ResultTextBox" Grid.Row="1" 
-                 IsReadOnly="True" TextAlignment="Right" 
-                 FontSize="32" Margin="5" BorderThickness="0"
-                 Background="Transparent"/>
+
+        <TextBox x:Name="ResultTextBox" Grid.Row="0"
+                 IsReadOnly="True" TextAlignment="Right"
+                 FontSize="36" Margin="10" BorderThickness="0"
+                 Background="Transparent" Foreground="White"
+                 VerticalContentAlignment="Bottom"/>
         
-        <Grid Grid.Row="2" Margin="5">
+
+        <Grid Grid.Row="1" Margin="5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
@@ -39,46 +37,136 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Button x:Name="ButtonSin" Content="sin" Grid.Row="0" Grid.Column="0" Click="FunctionButton_Click"/>
-            <Button x:Name="ButtonCos" Content="cos" Grid.Row="0" Grid.Column="1" Click="FunctionButton_Click"/>
-            <Button x:Name="ButtonTan" Content="tan" Grid.Row="0" Grid.Column="2" Click="FunctionButton_Click"/>
-            <Button x:Name="ButtonPow2" Content="x²" Grid.Row="0" Grid.Column="3" Click="FunctionButton_Click"/>
-            <Button x:Name="ButtonSqrt" Content="√x" Grid.Row="0" Grid.Column="4" Click="FunctionButton_Click"/>
 
-            <Button x:Name="ButtonPowY" Content="x^y" Grid.Row="1" Grid.Column="0" Click="FunctionButton_Click"/>
-            <Button x:Name="ButtonPow10" Content="10^x" Grid.Row="1" Grid.Column="1" Click="FunctionButton_Click"/>
-            <Button x:Name="ButtonLog" Content="log" Grid.Row="1" Grid.Column="2" Click="FunctionButton_Click"/>
-            <Button x:Name="ButtonLn" Content="ln" Grid.Row="1" Grid.Column="3" Click="FunctionButton_Click"/>
-            <Button x:Name="ButtonFact" Content="n!" Grid.Row="1" Grid.Column="4" Click="FunctionButton_Click"/>
+            <Button x:Name="ButtonSin" Content="sin" Grid.Row="0" Grid.Column="0" Style="{StaticResource FunctionButtonStyle}" Click="FunctionButton_Click"/>
+            <Button x:Name="ButtonCos" Content="cos" Grid.Row="0" Grid.Column="1" Style="{StaticResource FunctionButtonStyle}" Click="FunctionButton_Click"/>
+            <Button x:Name="ButtonTan" Content="tan" Grid.Row="0" Grid.Column="2" Style="{StaticResource FunctionButtonStyle}" Click="FunctionButton_Click"/>
+            <Button x:Name="ButtonPow2" Content="x²" Grid.Row="0" Grid.Column="3" Style="{StaticResource FunctionButtonStyle}" Click="FunctionButton_Click"/>
+            <Button x:Name="ButtonSqrt" Content="√x" Grid.Row="0" Grid.Column="4" Style="{StaticResource FunctionButtonStyle}" Click="FunctionButton_Click"/>
+
+
+            <Button x:Name="ButtonPowY" Content="x^y" Grid.Row="1" Grid.Column="0" Style="{StaticResource FunctionButtonStyle}" Click="FunctionButton_Click"/>
+            <Button x:Name="ButtonPow10" Content="10^x" Grid.Row="1" Grid.Column="1" Style="{StaticResource FunctionButtonStyle}" Click="FunctionButton_Click"/>
+            <Button x:Name="ButtonLog" Content="log" Grid.Row="1" Grid.Column="2" Style="{StaticResource FunctionButtonStyle}" Click="FunctionButton_Click"/>
+            <Button x:Name="ButtonLn" Content="ln" Grid.Row="1" Grid.Column="3" Style="{StaticResource FunctionButtonStyle}" Click="FunctionButton_Click"/>
+            <Button x:Name="ButtonFact" Content="n!" Grid.Row="1" Grid.Column="4" Style="{StaticResource FunctionButtonStyle}" Click="FunctionButton_Click"/>
             
-            <Button x:Name="ButtonOpenBracket" Content="(" Grid.Row="2" Grid.Column="0" Click="OperatorButton_Click"/>
-            <Button x:Name="ButtonCloseBracket" Content=")" Grid.Row="2" Grid.Column="1" Click="OperatorButton_Click"/>
-            <Button x:Name="ButtonAbs" Content="|x|" Grid.Row="2" Grid.Column="2" Click="FunctionButton_Click"/>
-            <Button x:Name="ButtonPi" Content="π" Grid.Row="2" Grid.Column="3" Click="ConstantButton_Click"/>
-            <Button x:Name="ButtonE" Content="e" Grid.Row="2" Grid.Column="4" Click="ConstantButton_Click"/>
+        
+            <Button x:Name="ButtonOpenBracket" Content="(" Grid.Row="2" Grid.Column="0" Style="{StaticResource FunctionButtonStyle}" Click="OperatorButton_Click"/>
+            <Button x:Name="ButtonCloseBracket" Content=")" Grid.Row="2" Grid.Column="1" Style="{StaticResource FunctionButtonStyle}" Click="OperatorButton_Click"/>
+            <Button x:Name="ButtonAbs" Content="|x|" Grid.Row="2" Grid.Column="2" Style="{StaticResource FunctionButtonStyle}" Click="FunctionButton_Click"/>
+            <Button x:Name="ButtonPi" Content="π" Grid.Row="2" Grid.Column="3" Style="{StaticResource FunctionButtonStyle}" Click="ConstantButton_Click"/>
+            <Button x:Name="ButtonE" Content="e" Grid.Row="2" Grid.Column="4" Style="{StaticResource FunctionButtonStyle}" Click="ConstantButton_Click"/>
 
-            <Button x:Name="Button7" Content="7" Grid.Row="3" Grid.Column="0" Click="NumberButton_Click"/>
-            <Button x:Name="Button8" Content="8" Grid.Row="3" Grid.Column="1" Click="NumberButton_Click"/>
-            <Button x:Name="Button9" Content="9" Grid.Row="3" Grid.Column="2" Click="NumberButton_Click"/>
-            <Button x:Name="ButtonDelete" Content="DEL" Grid.Row="3" Grid.Column="3" Click="DeleteButton_Click"/>
-            <Button x:Name="ButtonClear" Content="C" Grid.Row="3" Grid.Column="4" Click="ClearButton_Click"/>
 
-            <Button x:Name="Button4" Content="4" Grid.Row="4" Grid.Column="0" Click="NumberButton_Click"/>
-            <Button x:Name="Button5" Content="5" Grid.Row="4" Grid.Column="1" Click="NumberButton_Click"/>
-            <Button x:Name="Button6" Content="6" Grid.Row="4" Grid.Column="2" Click="NumberButton_Click"/>
-            <Button x:Name="ButtonMultiply" Content="×" Grid.Row="4" Grid.Column="3" Click="OperatorButton_Click"/>
-            <Button x:Name="ButtonDivide" Content="÷" Grid.Row="4" Grid.Column="4" Click="OperatorButton_Click"/>
+            <Button x:Name="Button7" Content="7" Grid.Row="3" Grid.Column="0" Style="{StaticResource NumberButtonStyle}" Click="NumberButton_Click"/>
+            <Button x:Name="Button8" Content="8" Grid.Row="3" Grid.Column="1" Style="{StaticResource NumberButtonStyle}" Click="NumberButton_Click"/>
+            <Button x:Name="Button9" Content="9" Grid.Row="3" Grid.Column="2" Style="{StaticResource NumberButtonStyle}" Click="NumberButton_Click"/>
+            <Button x:Name="ButtonDelete" Content="DEL" Grid.Row="3" Grid.Column="3" Style="{StaticResource ControlButtonStyle}" Click="DeleteButton_Click"/>
+            <Button x:Name="ButtonClear" Content="CE" Grid.Row="3" Grid.Column="4" Style="{StaticResource ControlButtonStyle}" Click="ClearButton_Click"/>
 
-            <Button x:Name="Button1" Content="1" Grid.Row="5" Grid.Column="0" Click="NumberButton_Click"/>
-            <Button x:Name="Button2" Content="2" Grid.Row="5" Grid.Column="1" Click="NumberButton_Click"/>
-            <Button x:Name="Button3" Content="3" Grid.Row="5" Grid.Column="2" Click="NumberButton_Click"/>
-            <Button x:Name="ButtonPlus" Content="+" Grid.Row="5" Grid.Column="3" Click="OperatorButton_Click"/>
-            <Button x:Name="ButtonMinus" Content="-" Grid.Row="5" Grid.Column="4" Click="OperatorButton_Click"/>
+          
+            <Button x:Name="Button4" Content="4" Grid.Row="4" Grid.Column="0" Style="{StaticResource NumberButtonStyle}" Click="NumberButton_Click"/>
+            <Button x:Name="Button5" Content="5" Grid.Row="4" Grid.Column="1" Style="{StaticResource NumberButtonStyle}" Click="NumberButton_Click"/>
+            <Button x:Name="Button6" Content="6" Grid.Row="4" Grid.Column="2" Style="{StaticResource NumberButtonStyle}" Click="NumberButton_Click"/>
+            <Button x:Name="ButtonMultiply" Content="×" Grid.Row="4" Grid.Column="3" Style="{StaticResource OperatorButtonStyle}" Click="OperatorButton_Click"/>
+            <Button x:Name="ButtonDivide" Content="÷" Grid.Row="4" Grid.Column="4" Style="{StaticResource OperatorButtonStyle}" Click="OperatorButton_Click"/>
 
-            <Button x:Name="Button0" Content="0" Grid.Row="6" Grid.Column="0" Click="NumberButton_Click"/>
-            <Button x:Name="ButtonComma" Content="," Grid.Row="6" Grid.Column="1" Click="CommaButton_Click"/>
-            <Button x:Name="ButtonInverse" Content="1/x" Grid.Row="6" Grid.Column="2" Click="FunctionButton_Click"/>
-            <Button x:Name="ButtonEquals" Content="=" Grid.Row="6" Grid.Column="3" Grid.ColumnSpan="2" Click="EqualsButton_Click"/>
+     
+            <Button x:Name="Button1" Content="1" Grid.Row="5" Grid.Column="0" Style="{StaticResource NumberButtonStyle}" Click="NumberButton_Click"/>
+            <Button x:Name="Button2" Content="2" Grid.Row="5" Grid.Column="1" Style="{StaticResource NumberButtonStyle}" Click="NumberButton_Click"/>
+            <Button x:Name="Button3" Content="3" Grid.Row="5" Grid.Column="2" Style="{StaticResource NumberButtonStyle}" Click="NumberButton_Click"/>
+            <Button x:Name="ButtonPlus" Content="+" Grid.Row="5" Grid.Column="3" Style="{StaticResource OperatorButtonStyle}" Click="OperatorButton_Click"/>
+            <Button x:Name="ButtonMinus" Content="-" Grid.Row="5" Grid.Column="4" Style="{StaticResource OperatorButtonStyle}" Click="OperatorButton_Click"/>
+
+
+            <Button x:Name="Button0" Content="0" Grid.Row="6" Grid.Column="0" Style="{StaticResource NumberButtonStyle}" Click="NumberButton_Click"/>
+            <Button x:Name="ButtonComma" Content="," Grid.Row="6" Grid.Column="1" Style="{StaticResource NumberButtonStyle}" Click="CommaButton_Click"/>
+            <Button x:Name="ButtonInverse" Content="1/x" Grid.Row="6" Grid.Column="2" Style="{StaticResource FunctionButtonStyle}" Click="FunctionButton_Click"/>
+            <Button x:Name="ButtonEquals" Content="=" Grid.Row="6" Grid.Column="3" Grid.ColumnSpan="2" Style="{StaticResource EqualsButtonStyle}" Click="EqualsButton_Click"/>
         </Grid>
+        
+     
+        <Window.Resources>
+            <Style x:Key="NumberButtonStyle" TargetType="Button">
+                <Setter Property="Background" Value="#FF2D2D30"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="FontSize" Value="20"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Margin" Value="2"/>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="#FF3E3E40"/>
+                    </Trigger>
+                    <Trigger Property="IsPressed" Value="True">
+                        <Setter Property="Background" Value="#FF007ACC"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            
+            <Style x:Key="OperatorButtonStyle" TargetType="Button">
+                <Setter Property="Background" Value="#FF2D2D30"/>
+                <Setter Property="Foreground" Value="#FF3F8EF5"/>
+                <Setter Property="FontSize" Value="20"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Margin" Value="2"/>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="#FF3E3E40"/>
+                    </Trigger>
+                    <Trigger Property="IsPressed" Value="True">
+                        <Setter Property="Background" Value="#FF007ACC"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            
+            <Style x:Key="FunctionButtonStyle" TargetType="Button">
+                <Setter Property="Background" Value="#FF2D2D30"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Margin" Value="2"/>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="#FF3E3E40"/>
+                    </Trigger>
+                    <Trigger Property="IsPressed" Value="True">
+                        <Setter Property="Background" Value="#FF007ACC"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            
+            <Style x:Key="ControlButtonStyle" TargetType="Button">
+                <Setter Property="Background" Value="#FF2D2D30"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Margin" Value="2"/>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="#FF3E3E40"/>
+                    </Trigger>
+                    <Trigger Property="IsPressed" Value="True">
+                        <Setter Property="Background" Value="#FF007ACC"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            
+            <Style x:Key="EqualsButtonStyle" TargetType="Button">
+                <Setter Property="Background" Value="#FF007ACC"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="FontSize" Value="20"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Margin" Value="2"/>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="#FF3E8EF5"/>
+                    </Trigger>
+                    <Trigger Property="IsPressed" Value="True">
+                        <Setter Property="Background" Value="#FF0066B3"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </Window.Resources>
     </Grid>
 </Window>
