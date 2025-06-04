@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Data;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace EngineeringCalculator
 {
@@ -12,6 +13,7 @@ namespace EngineeringCalculator
         private bool _isNewCalculation = true;
         private bool _isError = false;
         private bool _lastInputWasOperator = false;
+        private int _openBracketsCount = 0;
 
         public MainWindow()
         {
@@ -34,14 +36,10 @@ namespace EngineeringCalculator
             }
             else
             {
-                if (!(number == "0" && ResultTextBox.Text == "0"))
-                {
-                    ResultTextBox.Text += number;
-                }
+                ResultTextBox.Text += number;
             }
 
             _lastInputWasOperator = false;
-            UpdateHistory();
         }
 
         private void OperatorButton_Click(object sender, RoutedEventArgs e)
@@ -51,22 +49,37 @@ namespace EngineeringCalculator
             var button = (Button)sender;
             var op = button.Content.ToString();
 
-            if (_lastInputWasOperator && op != "(")
+            if (op == "(")
             {
-                ResultTextBox.Text = ResultTextBox.Text.Substring(0, ResultTextBox.Text.Length - 1) + op;
-            }
-            else
-            {
-                if (op == "(" && !_isNewCalculation && !IsLastCharacterOperator(ResultTextBox.Text))
+                _openBracketsCount++;
+                if (!_isNewCalculation && !IsLastCharacterOperator(ResultTextBox.Text))
                 {
                     op = "×" + op;
                 }
                 ResultTextBox.Text += op;
             }
+            else if (op == ")")
+            {
+                if (_openBracketsCount > 0 && !IsLastCharacterOperator(ResultTextBox.Text))
+                {
+                    _openBracketsCount--;
+                    ResultTextBox.Text += op;
+                }
+            }
+            else
+            {
+                if (_lastInputWasOperator)
+                {
+                    ResultTextBox.Text = ResultTextBox.Text.Substring(0, ResultTextBox.Text.Length - 1) + op;
+                }
+                else
+                {
+                    ResultTextBox.Text += op;
+                }
+            }
 
             _lastInputWasOperator = op != ")";
             _isNewCalculation = false;
-            UpdateHistory();
         }
 
         private bool IsLastCharacterOperator(string text)
@@ -88,12 +101,14 @@ namespace EngineeringCalculator
                 case "sin":
                 case "cos":
                 case "tan":
+                    _openBracketsCount++;
                     ResultTextBox.Text += function + "(";
                     break;
                 case "x²":
                     ResultTextBox.Text += "^2";
                     break;
                 case "√x":
+                    _openBracketsCount++;
                     ResultTextBox.Text += "√(";
                     break;
                 case "x^y":
@@ -103,9 +118,11 @@ namespace EngineeringCalculator
                     ResultTextBox.Text += "10^";
                     break;
                 case "log":
+                    _openBracketsCount++;
                     ResultTextBox.Text += "log(";
                     break;
                 case "ln":
+                    _openBracketsCount++;
                     ResultTextBox.Text += "ln(";
                     break;
                 case "n!":
@@ -113,6 +130,7 @@ namespace EngineeringCalculator
                     break;
                 case "|x|":
                     ResultTextBox.Text = Math.Abs(ParseCurrentNumber()).ToString(CultureInfo.CurrentCulture);
+                    _isNewCalculation = true;
                     break;
                 case "1/x":
                     CalculateInverse();
@@ -120,7 +138,6 @@ namespace EngineeringCalculator
             }
 
             _lastInputWasOperator = false;
-            UpdateHistory();
         }
 
         private void CalculateInverse()
@@ -133,6 +150,7 @@ namespace EngineeringCalculator
                     return;
                 }
                 ResultTextBox.Text = (1.0 / num).ToString(CultureInfo.CurrentCulture);
+                _isNewCalculation = true;
             }
         }
 
@@ -143,6 +161,7 @@ namespace EngineeringCalculator
                 try
                 {
                     ResultTextBox.Text = Factorial(num).ToString(CultureInfo.CurrentCulture);
+                    _isNewCalculation = true;
                 }
                 catch (ArgumentException ex)
                 {
@@ -182,7 +201,7 @@ namespace EngineeringCalculator
                 ResultTextBox.Text += constant == "π" ? Math.PI.ToString(CultureInfo.CurrentCulture) : Math.E.ToString(CultureInfo.CurrentCulture);
             }
 
-            UpdateHistory();
+            _lastInputWasOperator = false;
         }
 
         private void CommaButton_Click(object sender, RoutedEventArgs e)
@@ -196,15 +215,32 @@ namespace EngineeringCalculator
             }
             else if (!ResultTextBox.Text.Contains(","))
             {
-                ResultTextBox.Text += ",";
+                if (ResultTextBox.Text.Length > 0 && char.IsDigit(ResultTextBox.Text.Last()))
+                {
+                    ResultTextBox.Text += ",";
+                }
+                else
+                {
+                    ResultTextBox.Text += "0,";
+                }
             }
 
-            UpdateHistory();
+            _lastInputWasOperator = false;
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             if (_isError || string.IsNullOrEmpty(ResultTextBox.Text)) return;
+
+            var lastChar = ResultTextBox.Text.Last();
+            if (lastChar == '(')
+            {
+                _openBracketsCount--;
+            }
+            else if (lastChar == ')')
+            {
+                _openBracketsCount++;
+            }
 
             ResultTextBox.Text = ResultTextBox.Text.Substring(0, ResultTextBox.Text.Length - 1);
 
@@ -213,8 +249,6 @@ namespace EngineeringCalculator
                 ResultTextBox.Text = "0";
                 _isNewCalculation = true;
             }
-
-            UpdateHistory();
         }
 
         private void ClearButton_Click(object sender, RoutedEventArgs e)
@@ -228,12 +262,18 @@ namespace EngineeringCalculator
 
             try
             {
+                while (_openBracketsCount > 0)
+                {
+                    ResultTextBox.Text += ")";
+                    _openBracketsCount--;
+                }
+
                 var expression = PrepareExpression(ResultTextBox.Text);
                 var result = EvaluateExpression(expression);
                 
-                HistoryTextBox.Text = ResultTextBox.Text + " =";
                 ResultTextBox.Text = result.ToString(CultureInfo.CurrentCulture);
                 _isNewCalculation = true;
+                _openBracketsCount = 0;
             }
             catch (Exception ex)
             {
@@ -257,19 +297,18 @@ namespace EngineeringCalculator
                 .Replace("√(", "Math.Sqrt(")
                 .Replace("log(", "Math.Log10(")
                 .Replace("ln(", "Math.Log(")
-                .Replace("abs(", "Math.Abs(");
+                .Replace("|x|", "Math.Abs(x)");
 
-            if (CountCharacter(expression, '(') != CountCharacter(expression, ')'))
+            if (expression.Contains("Math.Abs(x)"))
             {
-                throw new ArgumentException("Несбалансированные скобки");
+                var currentNum = ResultTextBox.Text;
+                if (double.TryParse(currentNum, NumberStyles.Any, CultureInfo.CurrentCulture, out var num))
+                {
+                    expression = expression.Replace("Math.Abs(x)", $"Math.Abs({num.ToString(CultureInfo.InvariantCulture)})");
+                }
             }
 
             return expression;
-        }
-
-        private static int CountCharacter(string str, char ch)
-        {
-            return str.Count(c => c == ch);
         }
 
         private double EvaluateExpression(string expression)
@@ -304,22 +343,17 @@ namespace EngineeringCalculator
 
         private void ShowError(string message)
         {
-            HistoryTextBox.Text = "Ошибка";
             ResultTextBox.Text = message;
             _isError = true;
-        }
-
-        private void UpdateHistory()
-        {
-            HistoryTextBox.Text = ResultTextBox.Text;
+            _openBracketsCount = 0;
         }
 
         private void ClearAll()
         {
             ResultTextBox.Text = "0";
-            HistoryTextBox.Text = "";
             _isNewCalculation = true;
             _isError = false;
+            _openBracketsCount = 0;
         }
     }
 }
